@@ -8,7 +8,7 @@
 
 [es社区](https://elasticsearch.cn/explore)
 
-[Github OAuth](https://developer.github.com/apps/building-github-apps/creating-a-github-app/)
+[Github OAuth](https://developer.github.com/apps/building-oauth-apps/authorizing-oauth-apps/)
 
 [Bootstarp](https://v3.bootcss.com/css/)
 
@@ -16,5 +16,5 @@
 
 [Git](https://git-scm.com/)
 
-[VP](https://www.visual-paradigm.com/cn/)
+[Vsisual Paradigm](https://www.visual-paradigm.com/cn/)
 
