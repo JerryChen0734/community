@@ -11,24 +11,21 @@ public class PaginationDTO {
     private List<QuestionDTO> questions;
     private Boolean showPrevious;
     private Boolean showFirstPage;
-    private Boolean showText;
+    private Boolean showNext;
     private Boolean showEndPage;
 
     private Integer page;
     private List<Integer> pages = new ArrayList<>();
-    private Integer totalPage;
+    private Integer totalPage = 0;
 
+    /*
+    1.接受页面数据后判断是否打开开关
+    2.将当前分页后的页面展示存进pages给前端调用
+     */
 
-    public void setPagination(Integer totalCount, Integer page, Integer size) {
+    public void setPagination(Integer totalPage, Integer page) {
 
-        Integer totalPage = 0;
-
-        if (totalCount % size == 0) {
-            totalPage = totalCount / size;
-        } else {
-            totalPage = totalCount / size + 1;
-
-        }
+        this.totalPage = totalPage;
 
         this.page = page;
         pages.add(page);
@@ -52,9 +49,9 @@ public class PaginationDTO {
         }
 
         if (page == totalPage) {
-            showText = false;
+            showNext = false;
         } else {
-            showText = true;
+            showNext = true;
         }
 
         if (pages.contains(1)) {
