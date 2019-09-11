@@ -2,7 +2,7 @@
 
 ## 快速运行
 1. 安装必备工具  
-JDK，Maven，MYSQL
+JDK1.8，Maven，MYSQL
 2. 克隆代码到本地  
 3. 运行命令创建数据库脚本
 ```sh

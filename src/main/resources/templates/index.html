@@ -31,9 +31,9 @@
                     <h4 class="media-heading" th:text="${question.title}"></h4>
                     <span th:text="${question.description}"></span><br>
                     <span class="text-desc"><span th:text="${question.likeCount}"></span> 人关注 • <span
-                            th:text="${question.commentcCount}"></span> 个回复 • <span
+                            th:text="${question.commentCount}"></span> 个回复 • <span
                             th:text="${question.viewCount}"></span> 次浏览 • <span
-                            th:text="${#dates.format(question.gmtCreate,'yyyy年 MMMM月 dd日')}"></span></span>
+                            th:text="${#dates.format(question.gmtCreate,'yyyy年 MM月 dd日')}"></span></span>
 
                 </div>
             </div>

@@ -1,7 +1,6 @@
 package com.jerrychen.dome.controller;
 
 import com.jerrychen.dome.mapper.QuestionMapper;
-import com.jerrychen.dome.mapper.UserMapper;
 import com.jerrychen.dome.model.Question;
 import com.jerrychen.dome.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,15 +10,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 
 @Controller
 public class PublishController {
     @Autowired
     private QuestionMapper questionMapper;
-    @Autowired
-    private UserMapper userMapper;
     @GetMapping("/publish")
     String publish() {
         return "publish";
@@ -51,20 +47,11 @@ public class PublishController {
         }
 
 
-        User user=null;
-        Cookie[] cookies =request.getCookies();
-        if (null!=cookies){
-            for (Cookie cookie:cookies){
-                if (cookie.getName().equals(("token"))){
-                    String token=cookie.getValue();
-                    user=userMapper.findByToken(token);
-                    if (null!=user){
-                        request.getSession().setAttribute("user",user);
+        User user= (User) request.getSession().getAttribute("user");
 
-                    }
-                    break;
-                }
-            }
+        if (user==null){
+            return "redirect:/";
+
         }
         if (null==user){
             model.addAttribute("error","用户未登录");
