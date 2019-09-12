@@ -1,5 +1,6 @@
 package com.jerrychen.dome.mapper;
 
+import com.jerrychen.dome.dto.QuestionDTO;
 import com.jerrychen.dome.model.Question;
 import org.apache.ibatis.annotations.Insert;
 import org.apache.ibatis.annotations.Mapper;
@@ -21,4 +22,7 @@ public interface QuestionMapper {
     List<Question> listByUserId(@Param(value = "userId") Integer userId, @Param(value = "offset") Integer offset, Integer size);
     @Select("select  count(1) from question where creator=#{userId};")
     Integer countByUserId(@Param(value = "userId")Integer userId);
+
+    @Select("select * from question where id=#{id}")
+    Question getById(@Param(value = "id") Integer id);
 }
