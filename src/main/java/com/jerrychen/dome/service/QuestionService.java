@@ -39,11 +39,11 @@ public class QuestionService {
             totalPage = totalCount / size + 1;
 
         }
-        if (page<1){
-            page=1;
+        if (page < 1) {
+            page = 1;
         }
-        if(page>totalPage){
-            page=totalPage;
+        if (page > totalPage) {
+            page = totalPage;
         }
 
         paginationDTO.setPagination(totalPage, page);
@@ -78,11 +78,11 @@ public class QuestionService {
             totalPage = totalCount / size + 1;
 
         }
-        if (page<1){
-            page=1;
+        if (page < 1) {
+            page = 1;
         }
-        if(page>totalPage){
-            page=totalPage;
+        if (page > totalPage) {
+            page = totalPage;
         }
 
         paginationDTO.setPagination(totalPage, page);
@@ -105,12 +105,24 @@ public class QuestionService {
     }
 
     public QuestionDTO getById(Integer id) {
-        Question question=questionMapper.getById(id);
-        QuestionDTO questionDTO=new QuestionDTO();
-        BeanUtils.copyProperties(question,questionDTO);
+        Question question = questionMapper.getById(id);
+        QuestionDTO questionDTO = new QuestionDTO();
+        BeanUtils.copyProperties(question, questionDTO);
         User user = userMapper.findByCreator(question.getCreator());
         questionDTO.setUser(user);
 
         return questionDTO;
+    }
+
+
+    public void creatrOrUpdate(Question question) {
+        if (null == question.getId()) {
+            question.setGmtCreate(System.currentTimeMillis());
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.create(question);
+        } else {
+            question.setGmtModified(question.getGmtCreate());
+            questionMapper.update(question);
+        }
     }
 }
