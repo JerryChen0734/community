@@ -5,8 +5,34 @@
 JDK1.8，Maven，MYSQL
 2. 克隆代码到本地  
 3. 运行命令创建数据库脚本
-```sh
-mvn flyway:migrate
+```sql
+CREATE TABLE USER
+(
+    ID int AUTO_INCREMENT PRIMARY KEY NOT NULL,
+    ACCOUNT_ID VARCHAR(100),
+    NAME VARCHAR(50),
+    TOKEN VARCHAR(36),
+    GMT_CREATE BIGINT,
+    GMT_MODIFIED BIGINT,
+    BIO VARCHAR(256),
+    AVATAR_URL VARCHAR(100)
+
+);
+create table question
+(
+	id int not null,
+	title varchar(50) null,
+	description text null,
+	gmt_create bigint null,
+	gmt_modified bigint null,
+	creator int null,
+	comment_count int default 0 null,
+	view_count int default 0 null,
+	like_count int default 0 null,
+	tag varchar(256) null,
+	constraint question_pk
+		primary key (id)
+);
 ```
 4. 运行打包命令
 ```sh
@@ -51,37 +77,7 @@ http://localhost:8887
 [Postman](https://chrome.google.com/webstore/detail/coohjcphdfgbiolnekdpbcijmhambjff)
 
 ## 脚本
-```sql
-CREATE TABLE USER
-(
-    ID int AUTO_INCREMENT PRIMARY KEY NOT NULL,
-    ACCOUNT_ID VARCHAR(100),
-    NAME VARCHAR(50),
-    TOKEN VARCHAR(36),
-    GMT_CREATE BIGINT,
-    GMT_MODIFIED BIGINT,
-    BIO VARCHAR(256),
-    AVATAR_URL VARCHAR(100)
 
-);
-create table question
-(
-	id int not null,
-	title varchar(50) null,
-	description text null,
-	gmt_create bigint null,
-	gmt_modified bigint null,
-	creator int null,
-	comment_count int default 0 null,
-	view_count int default 0 null,
-	like_count int default 0 null,
-	tag varchar(256) null,
-	constraint question_pk
-		primary key (id)
-);
-
-
-```
 
 ```bash
 mvn  -Dmybatis.generator.overwrite=true mybatis-generator:generate
