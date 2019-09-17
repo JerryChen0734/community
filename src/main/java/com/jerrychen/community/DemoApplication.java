@@ -5,8 +5,7 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-@MapperScan("com.jerrychen.demo.mapper")
-
+@MapperScan("com.jerrychen.community.mapper")
 public class DemoApplication {
 
     public static void main(String[] args) {
