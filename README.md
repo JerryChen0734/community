@@ -42,7 +42,8 @@ http://localhost:8887
 [Git](https://git-scm.com/download)   
 [Visual Paradigm](https://www.visual-paradigm.com)    
 [Flyway](https://flywaydb.org/getstarted/firststeps/maven)  
-[Lombok](https://www.projectlombok.org)    
+[Lombok](https://www.projectlombok.org)  
+[generator](http://mybatis.org/generator/running/running.html)    
 [ctotree](https://www.octotree.io/)   
 [Table of content sidebar](https://chrome.google.com/webstore/detail/table-of-contents-sidebar/ohohkfheangmbedkgechjkmbepeikkej)    
 [One Tab](https://chrome.google.com/webstore/detail/chphlpgkkbolifaimnlloiipkdnihall)    
@@ -80,4 +81,8 @@ create table question
 );
 
 
+```
+
+```bash
+mvn  -Dmybatis.generator.overwrite=true mybatis-generator:generate
 ```
