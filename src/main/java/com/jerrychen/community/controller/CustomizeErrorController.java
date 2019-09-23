@@ -1,4 +1,4 @@
-package com.jerrychen.community.exception;
+package com.jerrychen.community.controller;
 
 import org.springframework.boot.web.servlet.error.ErrorController;
 import org.springframework.http.HttpStatus;
