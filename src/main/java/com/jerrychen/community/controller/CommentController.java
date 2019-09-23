@@ -11,7 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by codedrinker on 2019/5/30.
@@ -34,6 +35,8 @@ public class CommentController {
         comment.setCommentator(1);
         comment.setLikeCount(0L);
         commentMapper.insert(comment);
-        return null;
+        Map<Object,Object> objectObjectMap=new HashMap<>();
+        objectObjectMap.put("message","success");
+        return objectObjectMap;
     }
 }
