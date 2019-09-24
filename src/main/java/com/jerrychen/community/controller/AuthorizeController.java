@@ -9,6 +9,7 @@ import com.jerrychen.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -78,14 +79,19 @@ public class AuthorizeController {
 
     @GetMapping("/logout")
     String logout(HttpServletRequest request,
-    HttpServletResponse response
+                  HttpServletResponse response
     ) {
         request.getSession().removeAttribute("user");
-        Cookie cookie=new Cookie("token",null);
+        Cookie cookie = new Cookie("token", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
+      if (request.getSession().getAttribute("user") == "" || request.getSession().getAttribute("user") == null) {
 
-        return "redirect:/";
+          return "redirect:/";
+      }else {
+          return this.logout(request,response);
+      }
+
     }
 
 

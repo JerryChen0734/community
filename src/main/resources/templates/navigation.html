@@ -36,12 +36,12 @@
                         <ul class="dropdown-menu">
                             <li><a href="/profile/questions">我的问题</a></li>
                             <li><a href="#">个人资料</a></li>
-                            <li><a href="/logout">退出登录</a></li>
+                            <li><a href="/logout" onclick="retrun()">退出登录</a></li>
                         </ul>
                     </li>
 
                     <li th:if="${session.user==null}">
-                        <a href="https://github.com/login/oauth/authorize?client_id=5e6caff25e933fb47159&redirect_uri=http://localhost:8080/callback&scope=user&state=1">登录</a>
+                        <a href="https://github.com/login/oauth/authorize?client_id=5e6caff25e933fb47159&redirect_uri=http://localhost:8080/callback&scope=user&state=1" onclick="retrun()">登录</a>
                     </li>
 
                 </ul>

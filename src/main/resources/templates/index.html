@@ -9,6 +9,18 @@
     <script src="js/jquery-3.4.1.min.js"></script>
     <script src="js/bootstrap.min.js" type="application/javascript"></script>
 </head>
+<script type="application/javascript">
+    window.onload=function () {
+        var jumpUrl=window.localStorage.getItem("jumpUrl");
+        debugger;
+        if (jumpUrl!=null){
+            window.open(jumpUrl,"_self");
+            window.localStorage.removeItem("jumpUrl");
+
+
+        }
+    }
+</script>
 <body>
 <div th:insert=" navigation :: nav"></div>
 <div class="container-fluid main">
