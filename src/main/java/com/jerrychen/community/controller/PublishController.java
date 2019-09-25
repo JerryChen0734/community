@@ -44,7 +44,7 @@ public class PublishController {
             @RequestParam("title") String tietle,
             @RequestParam("description") String description,
             @RequestParam("tag") String tag,
-            @RequestParam("id") long id,
+            @RequestParam("id") Long id,
             HttpServletRequest request,
             Model model
 

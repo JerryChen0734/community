@@ -6,6 +6,7 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     NO_LOGIN(2003,"骂🐔脑壳前先走下流程，登陆先。"),
     SYS_ERROR(2004,"🐔脑壳你不要搞事！"),
     COMMENT_NOT_FOUND(2005,"🐔脑壳偷偷的吃掉了你想要回复的内容！"),
+    CONTENT_IS_EMPTY(2006,"你是不是对🐔脑壳无语了？"),
     ;
     private String message;
     private Integer code;

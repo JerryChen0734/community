@@ -63,6 +63,10 @@ body {
     margin-top: 25px;
 }
 
+.question-sp {
+    margin-top: 0px;
+}
+
 .question-tag {
     margin-right: 5px;
 }
@@ -77,6 +81,12 @@ body {
 
 .question-wechat {
     width: 95%;
+}
+.question-description{
+    min-height: 200px;
+}
+.question-list{
+    min-height: 450px;
 }
 
 .publish-tag-tab {
