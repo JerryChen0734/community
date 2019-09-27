@@ -4,10 +4,7 @@ import com.jerrychen.community.dto.CommentDTO;
 import com.jerrychen.community.enums.CommentTypeEnum;
 import com.jerrychen.community.exception.CustomizeErrorCode;
 import com.jerrychen.community.exception.CustomizeException;
-import com.jerrychen.community.mapper.CommentMapper;
-import com.jerrychen.community.mapper.QuestionExtMapper;
-import com.jerrychen.community.mapper.QuestionMapper;
-import com.jerrychen.community.mapper.UserMapper;
+import com.jerrychen.community.mapper.*;
 import com.jerrychen.community.model.*;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,6 +28,10 @@ public class CommentService {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private CommentExtMapper commentExtMapper;
+
     @Transactional
     public void insert(Comment comment) {
         //comment target wrong
@@ -45,7 +46,14 @@ public class CommentService {
             if (dbComment == null) {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
+
             commentMapper.insert(comment);
+
+            //增加评论数
+            Comment parentComment = new Comment();
+            parentComment.setId(comment.getParentId());
+            parentComment.setCommentCount(1);
+            commentExtMapper.incCommentCount(parentComment);
         } else if (comment.getType() == CommentTypeEnum.QUESTION.getType()) {
             //Reply to question
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -65,30 +73,30 @@ public class CommentService {
     4.把文章与user一一对应
      */
 
-    public List<CommentDTO> listByQuestionId(Long id) {
+    public List<CommentDTO> listByTaegetId(Long id, CommentTypeEnum type) {
         CommentExample example = new CommentExample();
         example.createCriteria()
                 .andParentIdEqualTo(id)
-                .andTypeEqualTo(CommentTypeEnum.QUESTION.getType());
+                .andTypeEqualTo(type.getType());
         example.setOrderByClause("gmt_create desc");
         List<Comment> comments = commentMapper.selectByExample(example);
-        if(comments.size()==0){
+        if (comments.size() == 0) {
             return new ArrayList<>();
         }
 
-        Set<Long> commentators =comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
-        List<Long> userIds=new ArrayList<>();
+        Set<Long> commentators = comments.stream().map(comment -> comment.getCommentator()).collect(Collectors.toSet());
+        List<Long> userIds = new ArrayList<>();
         userIds.addAll(commentators);
 
-        UserExample userExample=new UserExample();
+        UserExample userExample = new UserExample();
         userExample.createCriteria()
                 .andIdIn(userIds);
-        List<User> users=userMapper.selectByExample(userExample);
-        Map<Long,User> userMap=users.stream().collect(Collectors.toMap(user -> user.getId(),user -> user));
+        List<User> users = userMapper.selectByExample(userExample);
+        Map<Long, User> userMap = users.stream().collect(Collectors.toMap(user -> user.getId(), user -> user));
 
-        List<CommentDTO> commentDTOS=comments.stream().map(comment -> {
-            CommentDTO commentDTO=new CommentDTO();
-            BeanUtils.copyProperties(comment,commentDTO);
+        List<CommentDTO> commentDTOS = comments.stream().map(comment -> {
+            CommentDTO commentDTO = new CommentDTO();
+            BeanUtils.copyProperties(comment, commentDTO);
             commentDTO.setUser(userMap.get(comment.getCommentator()));
             return commentDTO;
         }).collect(Collectors.toList());

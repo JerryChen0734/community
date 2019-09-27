@@ -1,8 +1,8 @@
 package com.jerrychen.community.controller;
 
-import com.jerrychen.community.dto.CommentCreateDTO;
 import com.jerrychen.community.dto.CommentDTO;
 import com.jerrychen.community.dto.QuestionDTO;
+import com.jerrychen.community.enums.CommentTypeEnum;
 import com.jerrychen.community.service.CommentService;
 import com.jerrychen.community.service.QuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +27,7 @@ public class QuestionController {
 
         QuestionDTO questionDTO = questionService.getById(id);
 
-        List<CommentDTO> comments = commentService.listByQuestionId(id);
+        List<CommentDTO> comments = commentService.listByTaegetId(id, CommentTypeEnum.QUESTION);
         questionService.incView(id);
         model.addAttribute("question",questionDTO);
         model.addAttribute("comments",comments);

@@ -2,7 +2,9 @@ package com.jerrychen.community.controller;
 
 
 import com.jerrychen.community.dto.CommentCreateDTO;
+import com.jerrychen.community.dto.CommentDTO;
 import com.jerrychen.community.dto.ResultDTO;
+import com.jerrychen.community.enums.CommentTypeEnum;
 import com.jerrychen.community.exception.CustomizeErrorCode;
 import com.jerrychen.community.model.Comment;
 import com.jerrychen.community.model.User;
@@ -10,12 +12,10 @@ import com.jerrychen.community.service.CommentService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 /**
  * Created by codedrinker on 2019/5/30.
@@ -47,7 +47,15 @@ public class CommentController {
         comment.setGmtCreate(System.currentTimeMillis());
         comment.setCommentator(user.getId());
         comment.setLikeCount(0L);
+        comment.setCommentCount(0);
         commentService.insert(comment);
         return ResultDTO.successOf();
+    }
+
+    @ResponseBody
+    @RequestMapping(value = "/comment/{id}", method = RequestMethod.GET)
+    public ResultDTO<List<CommentDTO>> comments(@PathVariable (name = "id") Long id){
+        List<CommentDTO> commentDTOS = commentService.listByTaegetId(id, CommentTypeEnum.COMMENT);
+        return ResultDTO.successOf(commentDTOS);
     }
 }
