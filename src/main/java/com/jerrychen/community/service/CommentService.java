@@ -2,6 +2,8 @@ package com.jerrychen.community.service;
 
 import com.jerrychen.community.dto.CommentDTO;
 import com.jerrychen.community.enums.CommentTypeEnum;
+import com.jerrychen.community.enums.NotificationStatusEnum;
+import com.jerrychen.community.enums.NotificationTypeEnum;
 import com.jerrychen.community.exception.CustomizeErrorCode;
 import com.jerrychen.community.exception.CustomizeException;
 import com.jerrychen.community.mapper.*;
@@ -32,8 +34,11 @@ public class CommentService {
     @Autowired
     private CommentExtMapper commentExtMapper;
 
+    @Autowired
+    private NotificationMapper notificationMapper;
+
     @Transactional
-    public void insert(Comment comment) {
+    public void insert(Comment comment,User commentator) {
         //comment target wrong
         if ((comment.getParentId() == null || comment.getParentId() == 0) || (comment.getType() == null || !CommentTypeEnum.isExist(comment.getType()))) {
             throw new CustomizeException(CustomizeErrorCode.TARGET_PARAM_WRONG);
@@ -47,6 +52,12 @@ public class CommentService {
                 throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
             }
 
+            //Reply to question
+            Question question = questionMapper.selectByPrimaryKey(dbComment.getParentId());
+            if (question == null) {
+                throw new CustomizeException(CustomizeErrorCode.QUESTION_NOT_FOUND);
+            }
+
             commentMapper.insert(comment);
 
             //增加评论数
@@ -54,6 +65,10 @@ public class CommentService {
             parentComment.setId(comment.getParentId());
             parentComment.setCommentCount(1);
             commentExtMapper.incCommentCount(parentComment);
+
+            //创建通知
+            createNotify(comment, dbComment.getCommentator(), commentator.getName(), question.getTitle(), NotificationTypeEnum.REPLY_COMMENT,question.getId());
+
         } else if (comment.getType() == CommentTypeEnum.QUESTION.getType()) {
             //Reply to question
             Question question = questionMapper.selectByPrimaryKey(comment.getParentId());
@@ -63,7 +78,23 @@ public class CommentService {
             commentMapper.insert(comment);
             question.setCommentCount(1);
             questionExtMapper.incCommentCount(question);
+            //创建通知
+            createNotify(comment, question.getCreator(),commentator.getName(),question.getTitle(),NotificationTypeEnum.REPLY_QUESTION,question.getId());
         }
+
+    }
+
+    private void createNotify(Comment comment, Long receiver, String notifierName,String outerTitle, NotificationTypeEnum type, Long outerid) {
+        Notification notification = new Notification();
+        notification.setGmtCreate(System.currentTimeMillis());
+        notification.setType(type.getType());
+        notification.setOuterid(outerid);
+        notification.setNotifier(comment.getCommentator());
+        notification.setStatus(NotificationStatusEnum.UNREAD.getStatus());
+        notification.setReceiver(receiver);
+        notification.setNotifierName(notifierName);
+        notification.setOuterTitle(outerTitle);
+        notificationMapper.insert(notification);
     }
     /*
     如果单纯的查询完回复和对应的user非常耗时，所以为了简化时间复杂度，我将回复的ID取出来，通过一一对应的方法来实现。

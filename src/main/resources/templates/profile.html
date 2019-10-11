@@ -17,27 +17,44 @@
 
             <h2><span th:text="${sectionName}"></span></h2>
             <hr>
-            <div class="question-list">
-            <div class="media" th:each="question : ${pagination.questions}">
-                <div class="media-left">
-                    <a href="#">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " th:if="${section =='questions'}">
+                <div class="profile-list">
+                    <div class="media" th:each="question : ${pagination.date}">
+                        <div class="media-left">
+                            <a href="#">
 
-                        <img class="media-object img-rounded"
-                             th:src="${question.user.avatarUrl}"
-                        >
-                    </a>
-                </div>
-                <div class="media-body">
-                    <a class="media-heading" th:href="@{'/question/'+${question.id}}"  th:text="${question.title}"></a>
-                    <span class="text-desc"><span th:text="${question.likeCount}"></span> 人关注 • <span
-                            th:text="${question.commentCount}"></span> 个回复 • <span
-                            th:text="${question.viewCount}"></span> 次浏览 • <span
-                            th:text="${#dates.format(question.gmtCreate,'yyyy年MMMMdd日')}"></span></span>
+                                <img class="media-object img-rounded"
+                                     th:src="${question.user.avatarUrl}"
+                                >
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <a class="media-heading" th:href="@{'/question/'+${question.id}}"
+                               th:text="${question.title}"></a>
+                            <span class="text-desc"><span th:text="${question.likeCount}"></span> 人关注 • <span
+                                    th:text="${question.commentCount}"></span> 个回复 • <span
+                                    th:text="${question.viewCount}"></span> 次浏览 • <span
+                                    th:text="${#dates.format(question.gmtCreate,'yyyy年MM月dd日')}"></span></span>
 
+                        </div>
+                    </div>
                 </div>
             </div>
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 " th:if="${section =='replies'}">
+                <div class="profile-list">
+                <div class="media" th:each="notification : ${pagination.date}">
+                    <div class="media-body">
+                        <p>
+                            <spa th:text="${notification.notifierName +' '+notification.typeName + ' '}"></spa>
+                            <a class="media-heading" th:href="@{'/notification/'+${notification.id}}"
+                               th:text="${' '+notification.outerTitle}">
+                            </a>
+                            <span class="label label-danger" th:if="${notification.status == 0}">未读</span>
+                        </p>
+                    </div>
+                </div></div>
             </div>
-            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+            <div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 ">
                 <nav aria-label="Page navigation">
                     <ul class="pagination">
                         <li th:if="${pagination.showFirstPage}">
@@ -69,8 +86,6 @@
                     </ul>
                 </nav>
             </div>
-
-
         </div>
 
         <div class="col-lg-3 col-md-12 col-sm-12 col-xs-12 ">
@@ -79,7 +94,7 @@
                    th:class="${section =='questions'}?'active list-group-item ' : 'list-group-item  ' ">我的问题</a>
                 <a href="/profile/replies"
                    th:class="${section =='replies'}?'active list-group-item ' : 'list-group-item  ' ">最新回复
-                    <span class="badge">14</span>
+                    <span class="badge" th:text="${unreadCount}"></span>
                 </a>
             </div>
         </div>

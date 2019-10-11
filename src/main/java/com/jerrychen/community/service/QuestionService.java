@@ -68,13 +68,13 @@ public class QuestionService {
         }
 
 
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setDate(questionDTOList);
         return paginationDTO;
 
     }
 
     public PaginationDTO list(Long userId, Integer page, Integer size) {
-        PaginationDTO paginationDTO = new PaginationDTO();
+        PaginationDTO<QuestionDTO> paginationDTO = new PaginationDTO();
         Integer totalPage;
         QuestionExample questionExample = new QuestionExample();
         questionExample.createCriteria()
@@ -111,7 +111,7 @@ public class QuestionService {
         }
 
 
-        paginationDTO.setQuestions(questionDTOList);
+        paginationDTO.setDate(questionDTOList);
         return paginationDTO;
     }
 

@@ -88,7 +88,9 @@ body {
 .question-list{
     min-height: 450px;
 }
-
+.profile-list{
+    min-height: 250px;
+}
 .publish-tag-tab {
     display: none;
     margin-top: 10px;

@@ -1,15 +1,15 @@
 package com.jerrychen.community.controller;
 
-import com.jerrychen.community.provider.GithubProvider;
 import com.jerrychen.community.dto.AccessTokenDTO;
 import com.jerrychen.community.dto.GithubUser;
 import com.jerrychen.community.mapper.UserMapper;
 import com.jerrychen.community.model.User;
+import com.jerrychen.community.provider.GithubProvider;
 import com.jerrychen.community.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
@@ -39,10 +39,12 @@ public class AuthorizeController {
     @Autowired
     private UserService userService;
 
+
     @GetMapping("/callback")
     String callback(@RequestParam(name = "code") String code,
                     @RequestParam(name = "state") String state,
-                    HttpServletResponse response
+                    HttpServletResponse response,
+                    Model model
     ) {
         AccessTokenDTO accessTokenDTO = new AccessTokenDTO();
         accessTokenDTO.setClient_id(clientId);
@@ -85,12 +87,12 @@ public class AuthorizeController {
         Cookie cookie = new Cookie("token", null);
         cookie.setMaxAge(0);
         response.addCookie(cookie);
-      if (request.getSession().getAttribute("user") == "" || request.getSession().getAttribute("user") == null) {
+        if (request.getSession().getAttribute("user") == "" || request.getSession().getAttribute("user") == null) {
 
-          return "redirect:/";
-      }else {
-          return this.logout(request,response);
-      }
+            return "redirect:/";
+        } else {
+            return this.logout(request, response);
+        }
 
     }
 

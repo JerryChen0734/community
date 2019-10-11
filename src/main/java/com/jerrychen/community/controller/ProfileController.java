@@ -1,6 +1,9 @@
 package com.jerrychen.community.controller;
 
+import com.jerrychen.community.dto.NotificationDTO;
 import com.jerrychen.community.dto.PaginationDTO;
+import com.jerrychen.community.model.Notification;
+import com.jerrychen.community.service.NotificationService;
 import com.jerrychen.community.service.QuestionService;
 import com.jerrychen.community.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +14,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
 
 @Controller
 public class ProfileController {
@@ -18,6 +22,9 @@ public class ProfileController {
 
     @Autowired
     private QuestionService questionService;
+
+    @Autowired
+    private NotificationService notificationService;
 
     @GetMapping("/profile/{action}")
     String profile(HttpServletRequest request,
@@ -39,17 +46,20 @@ public class ProfileController {
         if ("questions".equals(action)) {
             model.addAttribute("section", "questions");
             model.addAttribute("sectionName", "我的提问");
+            PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
+            model.addAttribute("pagination", paginationDTO);
         } else if ("replies".equals(action)) {
+
+            PaginationDTO paginationDTO = notificationService.list(user.getId(), page, size);
+            Long unreadCount=notificationService.unreadCount(user.getId());
+            model.addAttribute("pagination", paginationDTO);
             model.addAttribute("section", "replies");
+            model.addAttribute("unreadCount", unreadCount);
             model.addAttribute("sectionName", "我的回复");
         } else {
             return "redirect:";
         }
 
-        PaginationDTO paginationDTO = questionService.list(user.getId(), page, size);
-
-
-        model.addAttribute("pagination", paginationDTO);
         return "profile";
 
     }
