@@ -1,5 +1,6 @@
 package com.jerrychen.community.service;
 
+import com.jerrychen.community.dto.QuestionQueryDTO;
 import com.jerrychen.community.exception.CustomizeErrorCode;
 import com.jerrychen.community.exception.CustomizeException;
 import com.jerrychen.community.mapper.QuestionExtMapper;
@@ -10,13 +11,16 @@ import com.jerrychen.community.mapper.QuestionMapper;
 import com.jerrychen.community.mapper.UserMapper;
 import com.jerrychen.community.model.Question;
 import com.jerrychen.community.model.User;
+import org.apache.commons.lang3.StringUtils;
 import org.apache.ibatis.session.RowBounds;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class QuestionService {
@@ -31,19 +35,28 @@ public class QuestionService {
      * 3.存为paginationDTO类型返回
      */
 
-    public PaginationDTO list(Integer page, Integer size) {
+    public PaginationDTO list(String search,Integer page, Integer size) {
+
+        if (StringUtils.isNotBlank(search)) {
+            String[] tags = StringUtils.split(search, " ");
+            search = Arrays.stream(tags).collect(Collectors.joining("|"));
+        }
+
         PaginationDTO paginationDTO = new PaginationDTO();
 
         Integer totalPage;
-        Integer totalCount = (int) questionMapper.countByExample(new QuestionExample());
 
+        QuestionQueryDTO questionQueryDTO = new QuestionQueryDTO();
+        questionQueryDTO.setSearch(search);
+
+        Integer totalCount = questionExtMapper.countBySearch(questionQueryDTO);
 
         if (totalCount % size == 0) {
             totalPage = totalCount / size;
         } else {
             totalPage = totalCount / size + 1;
-
         }
+
         if (page < 1) {
             page = 1;
         }
@@ -52,13 +65,12 @@ public class QuestionService {
         }
 
         paginationDTO.setPagination(totalPage, page);
-
         Integer offset = size * (page - 1);
-
-        QuestionExample example = new QuestionExample();
-        example.setOrderByClause("gmt_modified desc");
-        List<Question> questions = questionMapper.selectByExampleWithBLOBsWithRowbounds(example, new RowBounds(offset, size));
+        questionQueryDTO.setSize(size);
+        questionQueryDTO.setPage(offset);
+        List<Question> questions = questionExtMapper.selectBySearch(questionQueryDTO);
         List<QuestionDTO> questionDTOList = new ArrayList<>();
+
         for (Question question : questions) {
             User user = userMapper.selectByPrimaryKey(question.getCreator());
             QuestionDTO questionDTO = new QuestionDTO();
@@ -66,7 +78,6 @@ public class QuestionService {
             questionDTO.setUser(user);
             questionDTOList.add(questionDTO);
         }
-
 
         paginationDTO.setDate(questionDTOList);
         return paginationDTO;
@@ -163,5 +174,24 @@ public class QuestionService {
         question.setId(id);
         question.setViewCount(1);
         questionExtMapper.incView(question);
+    }
+
+    public PaginationDTO hotList(int size) {
+        PaginationDTO paginationDTO = new PaginationDTO();
+        QuestionExample questionExample = new QuestionExample();
+        questionExample.setOrderByClause("view_count desc");
+        List<Question> questions = questionMapper.selectByExampleWithRowbounds(questionExample, new RowBounds(0, size));
+        List<QuestionDTO> questionDTOList = new ArrayList<>();
+
+        for (Question question : questions) {
+            User user = userMapper.selectByPrimaryKey(question.getCreator());
+            QuestionDTO questionDTO = new QuestionDTO();
+            BeanUtils.copyProperties(question, questionDTO);
+            questionDTO.setUser(user);
+            questionDTOList.add(questionDTO);
+        }
+
+        paginationDTO.setDate(questionDTOList);
+        return paginationDTO;
     }
 }
