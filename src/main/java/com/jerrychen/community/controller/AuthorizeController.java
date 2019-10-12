@@ -6,6 +6,7 @@ import com.jerrychen.community.mapper.UserMapper;
 import com.jerrychen.community.model.User;
 import com.jerrychen.community.provider.GithubProvider;
 import com.jerrychen.community.service.UserService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -19,6 +20,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.util.UUID;
 
 @Controller
+@Log4j2
 public class AuthorizeController {
 
     @Autowired
@@ -72,6 +74,7 @@ public class AuthorizeController {
 
 
         } else {
+            log.error("callback get github error,{}",githubUser);
             //登录失败，重新登录
             return "redirect:/";
 
