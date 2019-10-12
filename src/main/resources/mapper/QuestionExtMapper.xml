@@ -35,7 +35,9 @@
         select count(*) from question
         <where>
             <if test="search!=null">
-                and title regexp #{search}
+                <if test="search!=''">
+                    and title regexp #{search}
+                </if>
             </if>
         </where>
     </select>
@@ -45,7 +47,9 @@
         select * from question
         <where>
             <if test="search!=null">
-                and title regexp #{search}
+                <if test="search!=''">
+                    and title regexp #{search}
+                </if>
             </if>
         </where>
         order by gmt_modified desc limit #{page},#{size}
