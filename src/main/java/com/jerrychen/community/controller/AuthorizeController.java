@@ -8,6 +8,7 @@ import com.jerrychen.community.mapper.UserMapper;
 import com.jerrychen.community.model.User;
 import com.jerrychen.community.provider.GithubProvider;
 import com.jerrychen.community.service.UserService;
+import io.swagger.annotations.Example;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -108,15 +109,14 @@ public class AuthorizeController {
                   @RequestParam(name = "repassword") String repassword,
                   HttpServletResponse response){
 
-        if (password==repassword){
-            throw new CustomizeException(CustomizeErrorCode.COMMENT_NOT_FOUND);
+        if (!password.equals(repassword)){
+            throw new CustomizeException(CustomizeErrorCode.PASSWORD_WRONG);
         }
 
         String token = UUID.randomUUID().toString();
         User user = new User();
         user.setToken(token);
         user.setName(name);
-        user.setAccountId("");
         user.setGmtCreate(System.currentTimeMillis());
         user.setGmtModified(user.getGmtCreate());
         user.setAvatarUrl("https://avatars2.githubusercontent.com/u/54530844?v=4");
@@ -125,6 +125,20 @@ public class AuthorizeController {
 
         //登录成功
         response.addCookie(new Cookie("token", token));
+        return "redirect:/";
+
+    }
+
+    @PostMapping("/signin")
+    String signin(@RequestParam(name = "name") String name,
+                  @RequestParam(name = "password") String password,
+                  HttpServletResponse response){
+
+        String token=userService.signin(name, password);
+        if (token!=null||token.length()>=0){
+            //登录成功
+            response.addCookie(new Cookie("token", token));
+        }
         return "redirect:/";
 
     }

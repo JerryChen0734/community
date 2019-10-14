@@ -8,7 +8,7 @@ public enum CustomizeErrorCode implements ICustomizeErrorCode {
     COMMENT_NOT_FOUND(2005,"🐔脑壳偷偷的吃掉了你想要回复的内容！"),
     CONTENT_IS_EMPTY(2006,"你是不是对🐔脑壳无语了？"),
     READ_NOTIFICATION(2007,"🐔脑壳来不能传递给你信息了。"),
-    PASSWORD_WRONG(2007,"密码要一样！！！。"),
+    PASSWORD_WRONG(2007,"密码要一样！！！"),
     ;
     private String message;
     private Integer code;
