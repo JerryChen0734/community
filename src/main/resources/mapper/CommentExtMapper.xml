@@ -18,7 +18,7 @@
         <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
     </resultMap>
     <update id="incCommentCount" parameterType="com.jerrychen.community.model.Comment">
- update test.comment
+ update comment
     set
     COMMENT_COUNT = COMMENT_COUNT + #{commentCount,jdbcType=INTEGER}
     where id = #{id}
